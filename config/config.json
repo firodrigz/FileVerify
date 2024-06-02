@@ -1,5 +1,5 @@
 {
-    "directories_to_monitor": ["D:\test.txt"],
+    "directories_to_monitor": ["D:\\test.txt"],
     "database_path": "db/files_integrity.db",
     "log_path": "logs/integrity_logs.log",
     "email_alerts": {

@@ -29,16 +29,28 @@ def store_initial_hashes(directories, db_path):
     try:
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
-        for directory in directories:
-            if os.path.isdir(directory):
-                for root, _, files in os.walk(directory):
+        for path in directories:
+            if os.path.isdir(path):
+                print(f"Procesando el directorio: {path}")
+                for root, _, files in os.walk(path):
                     for file in files:
                         file_path = os.path.join(root, file)
                         try:
                             file_hash = get_file_hash(file_path)
                             cursor.execute('INSERT OR REPLACE INTO file_hashes (path, hash) VALUES (?, ?)', (file_path, file_hash))
+                            print(f"Archivo procesado: {file_path}")
                         except Exception as e:
                             print("Error al procesar el archivo:", file_path, str(e))
+            elif os.path.isfile(path):
+                print(f"Procesando el archivo: {path}")
+                try:
+                    file_hash = get_file_hash(path)
+                    cursor.execute('INSERT OR REPLACE INTO file_hashes (path, hash) VALUES (?, ?)', (path, file_hash))
+                    print(f"Archivo procesado: {path}")
+                except Exception as e:
+                    print("Error al procesar el archivo:", path, str(e))
+            else:
+                print(f"El archivo o directorio no existe: {path}")
         conn.commit()
         print("Hashes almacenados correctamente.")
     except Exception as e:
@@ -56,6 +68,9 @@ if __name__ == "__main__":
         
         db_path = os.path.join(base_path, '../', config['database_path'])
         directories_to_monitor = config['directories_to_monitor']
+
+        print(f"Ruta de la base de datos: {db_path}")
+        print(f"Directorios a monitorear: {directories_to_monitor}")
 
         initialize_db(db_path)
         store_initial_hashes(directories_to_monitor, db_path)
