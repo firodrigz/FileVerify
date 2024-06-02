@@ -1,0 +1,14 @@
+{
+    "directories_to_monitor": ["D:\test.txt"],
+    "database_path": "db/files_integrity.db",
+    "log_path": "logs/integrity_logs.log",
+    "email_alerts": {
+      "enabled": true,
+      "smtp_server": "smtp.example.com",
+      "smtp_port": 587,
+      "username": "your_email@example.com",
+      "password": "your_password",
+      "to_email": "alert_recipient@example.com"
+    }
+  }
+  
