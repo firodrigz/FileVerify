@@ -19,12 +19,20 @@ def check_integrity(directories, db_path, log_path):
         cursor = conn.cursor()
         logging.basicConfig(filename=log_path, level=logging.INFO)
         
+        # Obtener la lista de todos los archivos registrados en la base de datos
+        cursor.execute('SELECT path FROM file_hashes')
+        db_files = cursor.fetchall()
+        db_files = {file[0] for file in db_files}
+        
+        current_files = set()
+
         for path in directories:
             if os.path.isdir(path):
                 print(f"Verificando el directorio: {path}")
                 for root, _, files in os.walk(path):
                     for file in files:
                         file_path = os.path.join(root, file)
+                        current_files.add(file_path)
                         current_hash = get_file_hash(file_path)
                         
                         cursor.execute('SELECT hash FROM file_hashes WHERE path = ?', (file_path,))
@@ -32,7 +40,8 @@ def check_integrity(directories, db_path, log_path):
                         if result:
                             original_hash = result[0]
                             if current_hash != original_hash:
-                                logging.info(f'[{datetime.now()}] File integrity issue detected: {file_path}')
+                                log_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                                logging.info(f'[{log_time}] File integrity issue detected: {file_path}')
                                 print(f"¡Cambios detectados en el archivo!: {file_path}")
                                 # send_email_alert(file_path)
                         else:
@@ -41,6 +50,7 @@ def check_integrity(directories, db_path, log_path):
             elif os.path.isfile(path):
                 print(f"Verificando el archivo: {path}")
                 file_path = path
+                current_files.add(file_path)
                 current_hash = get_file_hash(file_path)
                 
                 cursor.execute('SELECT hash FROM file_hashes WHERE path = ?', (file_path,))
@@ -48,12 +58,23 @@ def check_integrity(directories, db_path, log_path):
                 if result:
                     original_hash = result[0]
                     if current_hash != original_hash:
-                        logging.info(f'[{datetime.now()}] File integrity issue detected: {file_path}')
+                        log_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        logging.info(f'[{log_time}] File integrity issue detected: {file_path}')
                         print(f"¡Cambios detectados en el archivo!: {file_path}")
                         # send_email_alert(file_path)
                 else:
                     cursor.execute('INSERT INTO file_hashes (path, hash) VALUES (?, ?)', (file_path, current_hash))
                     conn.commit()
+
+        # Detectar archivos eliminados
+        deleted_files = db_files - current_files
+        for deleted_file in deleted_files:
+            log_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            logging.info(f'[{log_time}] File deleted: {deleted_file}')
+            print(f"¡Archivo eliminado!: {deleted_file}")
+            # send_email_alert(deleted_file)
+            cursor.execute('DELETE FROM file_hashes WHERE path = ?', (deleted_file,))
+            conn.commit()
 
         print("Verificación de integridad completada.")
     except Exception as e:
