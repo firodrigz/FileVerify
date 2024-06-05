@@ -1,7 +1,7 @@
-# Sistema de Monitoreo de Integridad de Archivos
+# Verificador de Integridad de Archivos/Directorios
 
 ## Descripción
-Este proyecto monitorea la integridad de archivos críticos y envía alertas en caso de detectar cambios no autorizados.
+Este proyecto monitorea la integridad de archivos críticos y envía alertas en caso de detectar cambios no autorizados. Funciona tanto en archivos individuales como en directorios. Detecta cambios de nombre y eliminación de archivo original.
 
 ## Requisitos
 - Python 3
