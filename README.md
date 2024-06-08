@@ -1,11 +1,11 @@
 # Verificador de Integridad de Archivos/Directorios
 
 ## Descripción
-Este proyecto monitorea la integridad de archivos críticos y envía alertas en caso de detectar cambios no autorizados. Funciona tanto en archivos individuales como en directorios. Detecta cambios de nombre y eliminación de archivo original.
+Este proyecto monitorea la integridad de archivos críticos y envía alertas por correo electrónico en caso de detectar cambios no autorizados. Funciona tanto en archivos individuales como en directorios. Detecta eliminación de archivo original.
 
 ## Requisitos
 - Python 3
-- Librerías: hashlib, sqlite3, smtplib
+- Librerías: hashlib, sqlite3, smtplib, json, logging, os
 
 ## Instalación
 1. Clona este repositorio:
@@ -14,19 +14,14 @@ Este proyecto monitorea la integridad de archivos críticos y envía alertas en 
 git clone https://github.com/firodrigz/FileVerify.git
 ```
 
-2. Instala las dependencias:
-
-``` bash 
-pip install -r requirements.txt
-```
-3. Configura el archivo `config/config.json` con los directorios a monitorear y las opciones de alerta por correo electrónico.
+2. Configura el archivo `config/config.json` con los directorios a monitorear.
 
 ## Uso
-1. Genera los hashes iniciales:
+1. Ingresa las credenciales para en envío de la alerta por correo electrónico y genera los hashes iniciales:
 
 ``` bash 
 cd scripts
-python3 scripts/initialize_hashes.py
+python3 main.py
 ```
 
 2. Programa la verificación de integridad (por ejemplo, usando `cron` en sistemas Unix).
