@@ -69,7 +69,7 @@ def check_integrity(directories, db_path, log_path):
                             original_hash = result[0]
                             if current_hash != original_hash:
                                 log_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                                logging.info(f'[{log_time}] File integrity issue detected: {file_path}')
+                                logging.critical(f'[{log_time}] File integrity issue detected: {file_path}')
                                 print(f"¡Cambios detectados en el archivo!: {file_path}")
                                 send_email_alert(file_path)
                         else:
@@ -87,7 +87,7 @@ def check_integrity(directories, db_path, log_path):
                     original_hash = result[0]
                     if current_hash != original_hash:
                         log_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                        logging.info(f'[{log_time}] File integrity issue detected: {file_path}')
+                        logging.critical(f'[{log_time}] File integrity issue detected: {file_path}')
                         print(f"¡Cambios detectados en el archivo!: {file_path}")
                         send_email_alert(file_path)
                 else:
@@ -97,7 +97,7 @@ def check_integrity(directories, db_path, log_path):
         deleted_files = db_files - current_files
         for deleted_file in deleted_files:
             log_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            logging.info(f'[{log_time}] File deleted: {deleted_file}')
+            logging.critical(f'[{log_time}] File deleted: {deleted_file}')
             print(f"¡Archivo eliminado!: {deleted_file}")
             send_email_alert(deleted_file)
             cursor.execute('DELETE FROM file_hashes WHERE path = ?', (deleted_file,))
