@@ -3,12 +3,12 @@ import platform
 import getpass
 
 def set_env_vars():
-    smtp_server = input("Enter SMTP Server (smtp.gmail.com - Gmail): ")
-    smtp_port = input("Enter SMTP Port (587 - Gmail): ")
-    email_username = input("Enter Email Username: ")
-    email_password = getpass.getpass(f"Enter password for {email_username}: ")
+    smtp_server = input("Ingrese SMTP Server (smtp.gmail.com - Gmail): ")
+    smtp_port = input("Ingrese SMTP Port (587 - Gmail): ")
+    email_username = input("Ingrese Email origen: ")
+    email_password = getpass.getpass(f"Ingrese password para {email_username}: ")
     from_email = email_username
-    to_email = input("Enter To Email: ")
+    to_email = input("Ingrese Email de destino: ")
 
     env_vars = {
         'SMTP_SERVER': smtp_server,
@@ -30,7 +30,7 @@ def set_env_vars():
             for key, value in env_vars.items():
                 profile.write(f'export {key}="{value}"\n')
 
-    print("Environment variables have been set. Please restart your terminal or run 'source ~/.bashrc' or 'source ~/.zshrc' for the changes to take effect.")
+    print("Se han establecido variables de entorno. Reinicie su terminal o ejecute 'source ~/.bashrc' o 'source ~/.zshrc' para que los cambios surtan efecto.")
 
 if __name__ == "__main__":
     set_env_vars()
