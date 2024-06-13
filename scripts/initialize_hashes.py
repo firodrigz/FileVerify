@@ -22,7 +22,7 @@ def initialize_db(db_path):
         conn.commit()
         logging.info("Base de datos inicializada correctamente.")
     except Exception as e:
-        logging.error("Error al inicializar la base de datos:", str(e))
+        logging.error(f"Error al inicializar la base de datos: {str(e)}")
     finally:
         conn.close()
 
@@ -75,8 +75,12 @@ if __name__ == "__main__":
     try:
         with open(config_path) as config_file:
             config = json.load(config_file)
-        logging.basicConfig(filename=os.path.join(base_path, '../', config['log_path_auto']), level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S')
+        logging.basicConfig(
+            filename=os.path.join(base_path, '../', config['log_path_auto']),
+            level=logging.INFO,
+            format='%(asctime)s - %(levelname)s - %(message)s',
+            datefmt='%Y-%m-%d %H:%M:%S'
+        )
 
         db_path = os.path.join(base_path, '../', config['database_path'])
         directories_to_monitor = config['directories_to_monitor']
@@ -87,4 +91,4 @@ if __name__ == "__main__":
         initialize_db(db_path)
         store_initial_hashes(directories_to_monitor, db_path)
     except Exception as e:
-        logging.error("Error:", str(e))
+        logging.error(f"Error: {str(e)}")
