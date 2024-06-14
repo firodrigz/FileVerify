@@ -1,14 +1,27 @@
 import os
 import platform
 import getpass
+import signal
+import sys
+
+def def_handler(sig, frame):
+    sys.exit(1)
+
+# Ctrl+C   
+signal.signal(signal.SIGINT, def_handler)
+
 
 def set_env_vars():
-    smtp_server = input("Ingrese SMTP Server (smtp.gmail.com - Gmail): ")
-    smtp_port = input("Ingrese SMTP Port (587 - Gmail): ")
-    email_username = input("Ingrese Email origen: ")
-    email_password = getpass.getpass(f"Ingrese password para {email_username}: ")
+    smtp_server = input("Ingrese SMTP Server (smtp.gmail.com - Gmail): ").strip()
+    smtp_port = input("Ingrese SMTP Port (587 - Gmail): ").strip()
+    email_username = input("Ingrese Email origen: ").strip()
+    email_password = getpass.getpass(f"Ingrese password para {email_username}: ").strip()
     from_email = email_username
-    to_email = input("Ingrese Email de destino: ")
+    to_email = input("Ingrese Email de destino: ").strip()
+
+    if not all([smtp_server, smtp_port, email_username, email_password, from_email, to_email]):
+        print("Todas las variables son obligatorias. Por favor, intente nuevamente.")
+        return
 
     env_vars = {
         'SMTP_SERVER': smtp_server,
