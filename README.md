@@ -21,10 +21,16 @@ git clone https://github.com/firodrigz/FileVerify.git
 
 ``` bash 
 cd scripts
-python3 main.py
+python3 set_env_vars.py
 ```
 
-2. Programa la verificación de integridad (por ejemplo, usando `cron` en sistemas Unix).
+2. Inicializar hashes de las rutas a monitorear.
+
+``` bash 
+python3 initialize_hashes.py
+```
+
+3. Programa la verificación de integridad (por ejemplo, usando `cron` en sistemas Unix).
 
 ``` bash 
 crontab -e
