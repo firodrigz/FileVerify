@@ -3,6 +3,17 @@ import hashlib
 import sqlite3
 import json
 import logging
+from set_env_vars import set_env_vars
+
+def check_env_vars(required_vars):
+    for var in required_vars:
+        value = os.getenv(var)
+        if not value:
+            logging.error(f"Variable de entorno faltante: {var}")
+            return False
+        else:
+            logging.info(f"Variable de entorno {var} encontrada con valor: {value}")
+    return True
 
 def get_file_hash(file_path):
     hasher = hashlib.sha256()
@@ -85,10 +96,16 @@ if __name__ == "__main__":
         db_path = os.path.join(base_path, '../', config['database_path'])
         directories_to_monitor = config['directories_to_monitor']
 
-        print(f"Ruta de la base de datos: {db_path}")
-        print(f"Directorios a monitorear: {directories_to_monitor}")
-
-        initialize_db(db_path)
-        store_initial_hashes(directories_to_monitor, db_path)
+        if set_env_vars():
+            # initialize_hashes.py solo se ejecuta si todas las variables de entorno existen            
+            print(f"Ruta de la base de datos: {db_path}")
+            print(f"Directorios a monitorear: {directories_to_monitor}")
+            initialize_db(db_path)
+            store_initial_hashes(directories_to_monitor, db_path)
+            logging.warning("Se han establecido variables de entorno. Reinicie su terminal o ejecute 'source ~/.bashrc' o 'source ~/.zshrc' para que los cambios surtan efecto.")
+            print("Se han establecido variables de entorno. Reinicie su terminal o ejecute 'source ~/.bashrc' o 'source ~/.zshrc' para que los cambios surtan efecto.")
+        else:
+            logging.error("No se establecen todas las variables de entorno necesarias.")       
+        
     except Exception as e:
         logging.error(f"Error: {str(e)}")

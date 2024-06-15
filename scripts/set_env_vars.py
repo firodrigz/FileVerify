@@ -1,6 +1,7 @@
 import os
 import platform
 import getpass
+import logging
 import signal
 import sys
 
@@ -21,7 +22,7 @@ def set_env_vars():
 
     if not all([smtp_server, smtp_port, email_username, email_password, from_email, to_email]):
         print("Todas las variables son obligatorias. Por favor, intente nuevamente.")
-        return
+        return False
 
     env_vars = {
         'SMTP_SERVER': smtp_server,
@@ -41,9 +42,9 @@ def set_env_vars():
         profile_path = bash_profile if os.path.exists(bash_profile) else zsh_profile
         with open(profile_path, "a") as profile:
             for key, value in env_vars.items():
-                profile.write(f'export {key}="{value}"\n')
+                profile.write(f'export {key}="{value}"\n')   
 
-    print("Se han establecido variables de entorno. Reinicie su terminal o ejecute 'source ~/.bashrc' o 'source ~/.zshrc' para que los cambios surtan efecto.")
+    return True
 
 if __name__ == "__main__":
-    set_env_vars()
+    set_env_vars()     
