@@ -21,14 +21,10 @@ git clone https://github.com/firodrigz/FileVerify.git
 
 ``` bash 
 cd scripts
-python3 set_env_vars.py
-```
-
-2. Inicializar hashes de las rutas a monitorear.
-
-``` bash 
 python3 initialize_hashes.py
 ```
+
+2. Reinicie su terminal o ejecute 'source ~/.bashrc' o 'source ~/.zshrc' para que las variables de entorno surtan efecto.
 
 3. Programa la verificación de integridad (por ejemplo, usando `cron` en sistemas Unix).
 
